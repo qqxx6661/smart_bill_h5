@@ -2,9 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, copilot/fix-9222d352-c9a5-4ab9-97b2-bc11a7fd307f ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: # Allow manual triggering
 
 permissions:
   contents: read
