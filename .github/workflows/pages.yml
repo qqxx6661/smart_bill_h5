@@ -2,9 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, copilot/fix-9222d352-c9a5-4ab9-97b2-bc11a7fd307f ]
-  pull_request:
-    branches: [ main ]
+    branches: [ main, "copilot/**" ]
   workflow_dispatch: # Allow manual triggering
 
 permissions:
@@ -28,6 +26,8 @@ jobs:
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
