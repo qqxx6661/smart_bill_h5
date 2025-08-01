@@ -1,0 +1,510 @@
+/* Component-specific styles */
+
+/* Avatar Selector */
+.avatar-selector {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.avatar-option {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f9f9f9;
+}
+
+.avatar-option:hover {
+    border-color: #1976d2;
+    transform: scale(1.05);
+}
+
+.avatar-option.selected {
+    border-color: #1976d2;
+    background: #e3f2fd;
+}
+
+/* Users Selector */
+.users-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.user-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.user-checkbox:hover {
+    background: #f5f5f5;
+    border-color: #1976d2;
+}
+
+.user-checkbox.selected {
+    background: #e3f2fd;
+    border-color: #1976d2;
+}
+
+.user-checkbox input[type="checkbox"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background: #f0f0f0;
+    margin-right: 12px;
+}
+
+.user-name {
+    font-size: 14px;
+    color: #333;
+}
+
+/* User List Item */
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+.user-item .user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin-right: 16px;
+}
+
+.user-item .user-details {
+    flex: 1;
+}
+
+.user-item .user-name {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.user-item .user-meta {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Account Book Summary */
+.book-summary {
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.book-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.book-participants {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 16px;
+}
+
+.book-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Balance Overview */
+.balance-overview {
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.balance-list {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+}
+
+.balance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+.balance-item:last-child {
+    border-bottom: none;
+}
+
+.balance-user {
+    display: flex;
+    align-items: center;
+}
+
+.balance-user .user-avatar {
+    margin-right: 12px;
+}
+
+.balance-amount {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.balance-amount.positive {
+    color: #4caf50;
+}
+
+.balance-amount.negative {
+    color: #f44336;
+}
+
+.balance-amount.zero {
+    color: #999;
+}
+
+/* Expenses Section */
+.expenses-section {
+    margin-bottom: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-header h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Expense Item */
+.expense-item {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.expense-item:hover {
+    border-color: #1976d2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.expense-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.expense-amount {
+    font-size: 18px;
+    font-weight: 500;
+    color: #f44336;
+}
+
+.expense-date {
+    font-size: 12px;
+    color: #999;
+}
+
+.expense-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.expense-participants {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #999;
+}
+
+.expense-payer {
+    display: flex;
+    align-items: center;
+}
+
+.expense-payer .user-avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    margin-right: 6px;
+}
+
+.expense-splitters {
+    display: flex;
+    align-items: center;
+}
+
+.expense-splitters .user-avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    margin-left: -4px;
+    border: 1px solid white;
+}
+
+/* Payer Selector */
+.payer-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.payer-option {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payer-option:hover {
+    background: #f5f5f5;
+    border-color: #1976d2;
+}
+
+.payer-option.selected {
+    background: #e3f2fd;
+    border-color: #1976d2;
+}
+
+.payer-option input[type="radio"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+}
+
+/* Split Users */
+.split-users {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.split-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.split-user.selected {
+    background: #e3f2fd;
+    border-color: #1976d2;
+}
+
+.split-user-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.split-user-info input[type="checkbox"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+}
+
+.split-amount {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.split-amount input {
+    width: 80px;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: right;
+    font-size: 14px;
+}
+
+.split-options {
+    display: flex;
+    gap: 8px;
+}
+
+/* Expense Detail */
+.expense-info {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #f0f0f0;
+}
+
+.expense-info h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.info-value {
+    font-size: 14px;
+    color: #333;
+    text-align: right;
+}
+
+.info-value.amount {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+/* Split Details */
+.split-details {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #f0f0f0;
+}
+
+.split-details h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.split-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+.split-item:last-child {
+    border-bottom: none;
+}
+
+.split-user-detail {
+    display: flex;
+    align-items: center;
+}
+
+.split-user-detail .user-avatar {
+    margin-right: 12px;
+}
+
+.split-user-detail .user-name {
+    font-size: 14px;
+    color: #333;
+}
+
+.split-amount-detail {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Responsive adjustments for components */
+@media (max-width: 768px) {
+    .book-stats {
+        gap: 16px;
+    }
+    
+    .split-amount input {
+        width: 60px;
+    }
+    
+    .expense-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .expense-amount {
+        font-size: 16px;
+    }
+}
