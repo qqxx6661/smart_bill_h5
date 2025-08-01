@@ -248,6 +248,73 @@ class Components {
             </div>
         `;
     }
+    
+    // Render membership status card
+    static renderMembershipStatus(membership) {
+        const isPremium = membership.type === 'premium';
+        
+        return `
+            <div class="membership-status-card ${isPremium ? 'premium' : 'free'}">
+                <div class="status-header">
+                    <span class="status-icon">${isPremium ? '👑' : '🆓'}</span>
+                    <div>
+                        <div class="status-title">${isPremium ? '会员用户' : '免费用户'}</div>
+                        <div class="status-subtitle">
+                            ${isPremium ? '享受所有高级功能' : '享受基础功能'}
+                        </div>
+                    </div>
+                    ${isPremium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Render limit warning
+    static renderLimitWarning(type, checkResult) {
+        if (checkResult.allowed) return '';
+        
+        const { message, currentCount, maxAllowed } = checkResult;
+        const warningType = type === 'users' ? 'user' : 'book';
+        
+        return `
+            <div class="limit-warning">
+                <div class="limit-warning-icon">⚠️</div>
+                <div class="limit-warning-content">
+                    <div class="limit-warning-title">已达到${type === 'users' ? '用户' : '账本'}数量上限</div>
+                    <p class="limit-warning-text">${message}</p>
+                </div>
+                <button class="limit-warning-upgrade" onclick="router.navigate('membership')">
+                    升级会员
+                </button>
+            </div>
+        `;
+    }
+    
+    // Render usage stats
+    static renderUsageStats() {
+        const membership = storage.getMembership();
+        const isPremium = storage.isPremiumUser();
+        const users = storage.getUsers();
+        const books = storage.getAccountBooks();
+        
+        const userLimit = isPremium ? '无限制' : `${users.length}/${storage.limits.FREE.MAX_USERS}`;
+        const bookLimit = isPremium ? '无限制' : `${books.length}/${storage.limits.FREE.MAX_ACCOUNT_BOOKS}`;
+        
+        return `
+            <div class="usage-stats">
+                <div class="usage-item">
+                    <span class="usage-icon">👥</span>
+                    <span class="usage-label">用户数量</span>
+                    <span class="usage-value">${userLimit}</span>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-icon">📖</span>
+                    <span class="usage-label">账本数量</span>
+                    <span class="usage-value">${bookLimit}</span>
+                </div>
+            </div>
+        `;
+    }
 }
 
 // Export Components as global

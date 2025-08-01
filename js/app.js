@@ -32,6 +32,14 @@ class App {
             });
         }
 
+        // Membership button
+        const membershipBtn = document.getElementById('membershipBtn');
+        if (membershipBtn) {
+            membershipBtn.addEventListener('click', () => {
+                router.navigate('membership');
+            });
+        }
+
         // User management events
         const addUserBtn = document.getElementById('addUserBtn');
         if (addUserBtn) {
@@ -170,6 +178,23 @@ class App {
 
         if (!usersList) return;
 
+        // Check user limit and show warning if needed
+        const userCheck = storage.canCreateMoreUsers();
+        const pageContent = document.querySelector('#usersPage .page-content');
+        
+        // Remove any existing warnings
+        const existingWarning = pageContent.querySelector('.limit-warning');
+        if (existingWarning) {
+            existingWarning.remove();
+        }
+        
+        // Add limit warning if at limit
+        if (!userCheck.allowed) {
+            const warning = document.createElement('div');
+            warning.innerHTML = Components.renderLimitWarning('users', userCheck);
+            pageContent.insertBefore(warning.firstElementChild, pageContent.firstElementChild);
+        }
+
         if (users.length === 0) {
             usersList.innerHTML = '';
             if (usersEmptyState) {
@@ -190,6 +215,15 @@ class App {
 
     // Load create user page
     loadCreateUserPage() {
+        // Check user limit first
+        const userCheck = storage.canCreateMoreUsers();
+        if (!userCheck.allowed) {
+            // Redirect to membership page with error message
+            Utils.showToast(userCheck.message);
+            router.navigate('membership');
+            return;
+        }
+
         // Reset form
         const form = document.getElementById('createUserForm');
         if (form) {
@@ -211,6 +245,15 @@ class App {
 
     // Load create book page
     loadCreateBookPage() {
+        // Check book limit first
+        const bookCheck = storage.canCreateMoreBooks();
+        if (!bookCheck.allowed) {
+            // Redirect to membership page with error message
+            Utils.showToast(bookCheck.message);
+            router.navigate('membership');
+            return;
+        }
+
         const users = storage.getUsers();
         const usersSelector = document.getElementById('usersSelector');
 
@@ -393,6 +436,31 @@ class App {
         }
     }
 
+    // Load membership page
+    loadMembershipPage() {
+        const membership = storage.getMembership();
+        const membershipStatus = document.getElementById('membershipStatus');
+        
+        if (membershipStatus) {
+            membershipStatus.innerHTML = Components.renderMembershipStatus(membership) + 
+                                       Components.renderUsageStats();
+        }
+        
+        // Update upgrade button text and state
+        const upgradeBtn = document.getElementById('upgradeBtn');
+        if (upgradeBtn) {
+            if (storage.isPremiumUser()) {
+                upgradeBtn.textContent = '已是会员';
+                upgradeBtn.disabled = true;
+                upgradeBtn.style.opacity = '0.5';
+            } else {
+                upgradeBtn.textContent = '敬请期待';
+                upgradeBtn.disabled = true;
+                upgradeBtn.style.opacity = '0.7';
+            }
+        }
+    }
+
     // Handle avatar selection
     selectAvatar(avatarElement) {
         // Remove previous selection
@@ -501,6 +569,13 @@ class App {
 
     // Handle create user form submission
     handleCreateUser(event) {
+        // Check user limit first
+        const userCheck = storage.canCreateMoreUsers();
+        if (!userCheck.allowed) {
+            Utils.showToast(userCheck.message);
+            return;
+        }
+
         const formData = new FormData(event.target);
         const selectedAvatar = document.querySelector('.avatar-option.selected');
         
@@ -542,6 +617,13 @@ class App {
 
     // Handle create book form submission
     handleCreateBook(event) {
+        // Check account book limit first
+        const bookCheck = storage.canCreateMoreBooks();
+        if (!bookCheck.allowed) {
+            Utils.showToast(bookCheck.message);
+            return;
+        }
+
         const formData = new FormData(event.target);
         
         const bookData = {

@@ -82,7 +82,8 @@ class PageManager {
             'create-book': 'createBookPage',
             'book-detail': 'bookDetailPage',
             'create-expense': 'createExpensePage',
-            'expense-detail': 'expenseDetailPage'
+            'expense-detail': 'expenseDetailPage',
+            'membership': 'membershipPage'
         };
     }
 
@@ -158,6 +159,11 @@ class PageManager {
                 headerTitle.textContent = '账目详情';
                 break;
 
+            case 'membership':
+                backBtn.style.display = 'block';
+                headerTitle.textContent = '会员中心';
+                break;
+
             default:
                 backBtn.style.display = 'block';
                 headerTitle.textContent = '智能记账';
@@ -224,6 +230,14 @@ document.addEventListener('DOMContentLoaded', () => {
         pageManager.showPage('expense-detail');
         if (window.app && window.app.loadExpenseDetailPage) {
             window.app.loadExpenseDetailPage(params.id);
+        }
+    });
+
+    // Membership page
+    router.register('membership', () => {
+        pageManager.showPage('membership');
+        if (window.app && window.app.loadMembershipPage) {
+            window.app.loadMembershipPage();
         }
     });
 
