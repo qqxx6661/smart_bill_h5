@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能记账 - 多人共享账本，轻松分摊费用</title>
+    <meta name="description" content="智能记账H5应用，支持多人共享账本、自动费用分摊、AA制计算。适配PC和移动端，数据本地存储，操作简单便捷。">
+    <meta name="keywords" content="记账,共享账本,费用分摊,AA制,移动记账,H5应用">
+    <meta name="author" content="Smart Bill H5">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="智能记账 - 多人共享账本">
+    <meta property="og:description" content="支持多人共享的智能记账应用，自动费用分摊，AA制计算，适配PC和移动端">
+    <meta property="og:url" content="https://qqxx6661.github.io/smart_bill_h5/">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="智能记账 - 多人共享账本">
+    <meta property="twitter:description" content="支持多人共享的智能记账应用，自动费用分摊，AA制计算，适配PC和移动端">
+    
+    <!-- PWA相关 -->
+    <meta name="theme-color" content="#1976d2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="智能记账">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/components.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Header -->
+        <header class="header" id="header">
+            <div class="header-content">
+                <button class="back-btn" id="backBtn" style="display: none;">
+                    <span class="back-icon">←</span>
+                </button>
+                <h1 class="header-title" id="headerTitle">智能记账</h1>
+                <div class="header-right" id="headerRight"></div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main" id="main">
+            <!-- Home Page -->
+            <div class="page" id="homePage">
+                <div class="page-content">
+                    <div class="welcome-section">
+                        <h2>我的账本</h2>
+                        <p>管理您的共享账本，轻松记账</p>
+                    </div>
+                    
+                    <div class="account-books" id="accountBooksList">
+                        <!-- Account books will be loaded here -->
+                    </div>
+
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <div class="empty-icon">📖</div>
+                        <p>还没有账本，创建第一个账本开始记账吧！</p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="createBookBtn">创建账本</button>
+                        <button class="btn btn-secondary" id="manageUsersBtn">管理用户</button>
+                        <button class="btn btn-upgrade" id="membershipBtn">
+                            <span class="btn-icon">👑</span>
+                            升级会员
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users List Page -->
+            <div class="page" id="usersPage" style="display: none;">
+                <div class="page-content">
+                    <div class="page-header">
+                        <h2>用户管理</h2>
+                        <button class="btn btn-small btn-primary" id="addUserBtn">添加用户</button>
+                    </div>
+                    
+                    <div class="users-list" id="usersList">
+                        <!-- Users will be loaded here -->
+                    </div>
+
+                    <div class="empty-state" id="usersEmptyState" style="display: none;">
+                        <div class="empty-icon">👥</div>
+                        <p>还没有用户，添加第一个用户吧！</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create User Page -->
+            <div class="page" id="createUserPage" style="display: none;">
+                <div class="page-content">
+                    <h2>添加用户</h2>
+                    
+                    <form class="form" id="createUserForm">
+                        <div class="form-group">
+                            <label for="userName">用户名 *</label>
+                            <input type="text" id="userName" name="userName" placeholder="请输入用户名" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="userAvatar">头像</label>
+                            <div class="avatar-selector" id="avatarSelector">
+                                <div class="avatar-option selected" data-avatar="👤">👤</div>
+                                <div class="avatar-option" data-avatar="👨">👨</div>
+                                <div class="avatar-option" data-avatar="👩">👩</div>
+                                <div class="avatar-option" data-avatar="👦">👦</div>
+                                <div class="avatar-option" data-avatar="👧">👧</div>
+                                <div class="avatar-option" data-avatar="🧑">🧑</div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelUserBtn">取消</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Create Account Book Page -->
+            <div class="page" id="createBookPage" style="display: none;">
+                <div class="page-content">
+                    <h2>创建账本</h2>
+                    
+                    <form class="form" id="createBookForm">
+                        <div class="form-group">
+                            <label for="bookName">账本名称 *</label>
+                            <input type="text" id="bookName" name="bookName" placeholder="请输入账本名称" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>参与用户 *</label>
+                            <div class="users-selector" id="usersSelector">
+                                <!-- Users will be loaded here -->
+                            </div>
+                            <p class="form-hint">至少选择一个用户</p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelBookBtn">取消</button>
+                            <button type="submit" class="btn btn-primary">创建</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Account Book Detail Page -->
+            <div class="page" id="bookDetailPage" style="display: none;">
+                <div class="page-content">
+                    <div class="book-summary" id="bookSummary">
+                        <!-- Book summary will be loaded here -->
+                    </div>
+
+                    <div class="balance-overview" id="balanceOverview">
+                        <!-- Balance overview will be loaded here -->
+                    </div>
+
+                    <div class="expenses-section">
+                        <div class="section-header">
+                            <h3>账目记录</h3>
+                            <button class="btn btn-small btn-primary" id="addExpenseBtn">记一笔</button>
+                        </div>
+                        
+                        <div class="expenses-list" id="expensesList">
+                            <!-- Expenses will be loaded here -->
+                        </div>
+
+                        <div class="empty-state" id="expensesEmptyState" style="display: none;">
+                            <div class="empty-icon">💰</div>
+                            <p>还没有账目记录，添加第一笔支出吧！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Expense Page -->
+            <div class="page" id="createExpensePage" style="display: none;">
+                <div class="page-content">
+                    <h2>记一笔</h2>
+                    
+                    <form class="form" id="createExpenseForm">
+                        <div class="form-group">
+                            <label for="expenseAmount">金额 *</label>
+                            <input type="number" id="expenseAmount" name="amount" placeholder="0.00" step="0.01" min="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expenseDescription">描述</label>
+                            <input type="text" id="expenseDescription" name="description" placeholder="请输入支出描述">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>付款人 *</label>
+                            <div class="payer-selector" id="payerSelector">
+                                <!-- Payers will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>分摊用户 *</label>
+                            <div class="split-users" id="splitUsers">
+                                <!-- Split users will be loaded here -->
+                            </div>
+                            <div class="split-options">
+                                <button type="button" class="btn btn-small btn-secondary" id="selectAllBtn">全选</button>
+                                <button type="button" class="btn btn-small btn-secondary" id="equalSplitBtn">平均分摊</button>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelExpenseBtn">取消</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Expense Detail Page -->
+            <div class="page" id="expenseDetailPage" style="display: none;">
+                <div class="page-content">
+                    <div class="expense-info" id="expenseInfo">
+                        <!-- Expense info will be loaded here -->
+                    </div>
+                    
+                    <div class="split-details" id="splitDetails">
+                        <!-- Split details will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membership Page -->
+            <div class="page" id="membershipPage" style="display: none;">
+                <div class="page-content">
+                    <div class="membership-header">
+                        <div class="membership-icon">👑</div>
+                        <h2>升级会员</h2>
+                        <p>解锁更多功能，享受无限制的记账体验</p>
+                    </div>
+
+                    <div class="membership-status" id="membershipStatus">
+                        <!-- Current membership status will be loaded here -->
+                    </div>
+
+                    <div class="membership-plans">
+                        <div class="plan-card current-plan">
+                            <div class="plan-header">
+                                <h3>免费版</h3>
+                                <div class="plan-price">¥0</div>
+                            </div>
+                            <div class="plan-features">
+                                <div class="feature">
+                                    <span class="feature-icon">👥</span>
+                                    <span>最多3个用户</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">📖</span>
+                                    <span>最多1个账本</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">💰</span>
+                                    <span>基础记账功能</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="plan-card premium-plan">
+                            <div class="plan-badge">推荐</div>
+                            <div class="plan-header">
+                                <h3>会员版</h3>
+                                <div class="plan-price">敬请期待</div>
+                            </div>
+                            <div class="plan-features">
+                                <div class="feature">
+                                    <span class="feature-icon">👥</span>
+                                    <span>无限用户数量</span>
+                                    <span class="feature-badge">无限制</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">📖</span>
+                                    <span>无限账本数量</span>
+                                    <span class="feature-badge">无限制</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">💰</span>
+                                    <span>高级记账功能</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">📊</span>
+                                    <span>详细统计报表</span>
+                                    <span class="feature-badge">即将推出</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">☁️</span>
+                                    <span>云端同步备份</span>
+                                    <span class="feature-badge">即将推出</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-upgrade" id="upgradeBtn">敬请期待</button>
+                        </div>
+                    </div>
+
+                    <div class="membership-faq">
+                        <h3>常见问题</h3>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>🤔 什么时候可以购买会员？</span>
+                            </div>
+                            <div class="faq-answer">
+                                <p>会员功能正在开发中，敬请期待后续更新！</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>💳 支持哪些支付方式？</span>
+                            </div>
+                            <div class="faq-answer">
+                                <p>将支持微信支付、支付宝等主流支付方式。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Toast Message -->
+        <div class="toast" id="toast" style="display: none;">
+            <span class="toast-message" id="toastMessage"></span>
+        </div>
+    </div>
+
+    <script src="./js/storage.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/router.js"></script>
+    <script src="./js/components.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
