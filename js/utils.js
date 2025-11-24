@@ -2,22 +2,24 @@
 class Utils {
     // Format currency
     static formatCurrency(amount) {
-        return '¥' + parseFloat(amount).toFixed(2);
+        const num = Number(amount);
+        const safe = Number.isFinite(num) ? num : 0;
+        return '¥' + safe.toFixed(2);
     }
 
     // Format date
     static formatDate(dateString) {
         const date = new Date(dateString);
         const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const sameDay = date.toDateString() === now.toDateString();
+        const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 1) {
+        if (sameDay) {
             return '今天';
-        } else if (diffDays === 2) {
+        } else if (diffDays === 1) {
             return '昨天';
-        } else if (diffDays <= 7) {
-            return `${diffDays - 1}天前`;
+        } else if (diffDays > 1 && diffDays < 7) {
+            return `${diffDays}天前`;
         } else {
             return date.toLocaleDateString('zh-CN', {
                 month: 'short',

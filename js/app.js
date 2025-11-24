@@ -6,6 +6,7 @@ class App {
         this.selectedSplitUsers = [];
         this.currentBookId = null;
         this.currentExpenseId = null;
+        this.editingUserId = null;
         this.init();
     }
 
@@ -215,13 +216,14 @@ class App {
 
     // Load create user page
     loadCreateUserPage() {
-        // Check user limit first
-        const userCheck = storage.canCreateMoreUsers();
-        if (!userCheck.allowed) {
-            // Redirect to membership page with error message
-            Utils.showToast(userCheck.message);
-            router.navigate('membership');
-            return;
+        const isEditing = !!this.editingUserId;
+        if (!isEditing) {
+            const userCheck = storage.canCreateMoreUsers();
+            if (!userCheck.allowed) {
+                Utils.showToast(userCheck.message);
+                router.navigate('membership');
+                return;
+            }
         }
 
         // Reset form
@@ -230,16 +232,33 @@ class App {
             form.reset();
         }
 
-        // Reset avatar selection
         const avatarOptions = document.querySelectorAll('.avatar-option');
         avatarOptions.forEach(option => {
             option.classList.remove('selected');
         });
 
-        // Select default avatar
-        const defaultAvatar = document.querySelector('.avatar-option[data-avatar="👤"]');
-        if (defaultAvatar) {
-            defaultAvatar.classList.add('selected');
+        const titleEl = document.querySelector('#createUserPage h2');
+        if (titleEl) {
+            titleEl.textContent = isEditing ? '编辑用户' : '添加用户';
+        }
+
+        if (isEditing) {
+            const user = storage.getUserById(this.editingUserId);
+            if (user) {
+                const nameInput = document.getElementById('userName');
+                if (nameInput) {
+                    nameInput.value = user.name;
+                }
+                const currentAvatarEl = document.querySelector(`.avatar-option[data-avatar="${user.avatar}"]`);
+                if (currentAvatarEl) {
+                    currentAvatarEl.classList.add('selected');
+                }
+            }
+        } else {
+            const defaultAvatar = document.querySelector('.avatar-option[data-avatar="👤"]');
+            if (defaultAvatar) {
+                defaultAvatar.classList.add('selected');
+            }
         }
     }
 
@@ -474,8 +493,10 @@ class App {
 
     // Handle user selection for book creation
     toggleUserSelection(userId) {
-        const checkbox = document.querySelector(`input[type="checkbox"][onchange*="${userId}"]`);
-        const userCheckbox = checkbox.closest('.user-checkbox');
+        const userCheckbox = document.querySelector(`.user-checkbox[data-user-id="${userId}"]`);
+        if (!userCheckbox) return;
+        const checkbox = userCheckbox.querySelector('input[type="checkbox"]');
+        if (!checkbox) return;
 
         if (checkbox.checked) {
             this.selectedUsers.push(userId);
@@ -524,7 +545,6 @@ class App {
     // Update split amount
     updateSplitAmount(userId, amount) {
         // Validation will be done on form submission
-        console.log(`Updated split amount for ${userId}: ${amount}`);
     }
 
     // Select all users for splitting
@@ -569,11 +589,13 @@ class App {
 
     // Handle create user form submission
     handleCreateUser(event) {
-        // Check user limit first
-        const userCheck = storage.canCreateMoreUsers();
-        if (!userCheck.allowed) {
-            Utils.showToast(userCheck.message);
-            return;
+        const isEditing = !!this.editingUserId;
+        if (!isEditing) {
+            const userCheck = storage.canCreateMoreUsers();
+            if (!userCheck.allowed) {
+                Utils.showToast(userCheck.message);
+                return;
+            }
         }
 
         const formData = new FormData(event.target);
@@ -594,25 +616,44 @@ class App {
             return;
         }
 
-        // Check for duplicate names
         const existingUsers = storage.getUsers();
-        if (existingUsers.some(user => user.name === userData.name)) {
-            Utils.showToast('用户名已存在');
-            return;
+        if (isEditing) {
+            if (existingUsers.some(user => user.name === userData.name && user.id !== this.editingUserId)) {
+                Utils.showToast('用户名已存在');
+                return;
+            }
+        } else {
+            if (existingUsers.some(user => user.name === userData.name)) {
+                Utils.showToast('用户名已存在');
+                return;
+            }
         }
 
         Utils.showLoading();
 
         try {
-            const newUser = storage.addUser(userData);
-            Utils.hideLoading();
-            Utils.showToast('用户创建成功');
-            router.navigate('users');
+            if (isEditing) {
+                const updated = storage.updateUser(this.editingUserId, userData);
+                this.editingUserId = null;
+                Utils.hideLoading();
+                Utils.showToast('用户更新成功');
+                router.navigate('users');
+            } else {
+                const newUser = storage.addUser(userData);
+                Utils.hideLoading();
+                Utils.showToast('用户创建成功');
+                router.navigate('users');
+            }
         } catch (error) {
             Utils.hideLoading();
-            Utils.showToast('创建用户失败，请重试');
+            Utils.showToast(isEditing ? '更新用户失败，请重试' : '创建用户失败，请重试');
             console.error('Error creating user:', error);
         }
+    }
+
+    editUser(userId) {
+        this.editingUserId = userId;
+        router.navigate('create-user');
     }
 
     // Handle create book form submission

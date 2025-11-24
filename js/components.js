@@ -2,10 +2,6 @@
 class Components {
     // Render account book card
     static renderAccountBookCard(book, stats) {
-        const participants = storage.getUsers().filter(user => 
-            book.participants.includes(user.id)
-        );
-        
         const participantNames = Utils.formatParticipants(book.participants, storage.getUsers());
         
         return `
@@ -143,10 +139,6 @@ class Components {
 
     // Render book summary
     static renderBookSummary(book, stats) {
-        const participants = storage.getUsers().filter(user => 
-            book.participants.includes(user.id)
-        );
-        
         const participantNames = Utils.formatParticipants(book.participants, storage.getUsers());
 
         return `
@@ -162,7 +154,7 @@ class Components {
                     <div class="stat-label">总支出</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">${participants.length}</div>
+                    <div class="stat-value">${book.participants.length}</div>
                     <div class="stat-label">参与人</div>
                 </div>
             </div>
